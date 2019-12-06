@@ -1,0 +1,67 @@
+version: '3'
+
+services:
+  frontend:
+    user: "${UID}:${GID}"
+    build:
+      context: .
+      dockerfile: dockerfiles/react
+    # entrypoint: /entrypoint.sh
+    depends_on:
+      -  backend
+    #ports:
+    #  - "${FRONTEND_PORT}:3000"
+    expose: 
+      - "3000"
+    volumes:
+      - frontend:/opt/frontend
+    environment:
+      - HOST=0.0.0.0
+      - PORT=${FRONTEND_PORT}
+      - CHOKIDAR_USEPOLLING=true
+      - API_HOST=${BACKEND_RUNNING_ON}
+      - API_PORT=${BACKEND_PORT}
+  backend:
+    user: "${UID}:${GID}"
+    build:
+      context: .
+      dockerfile: dockerfiles/backend
+    depends_on:
+      - db
+    #ports:
+    #  - "${BACKEND_PORT}:8000"
+    expose: 
+      - "8000"
+    volumes:
+      - ./src/backend:/opt/backend
+    environment:
+      - PYTHONPATH=/opt/backend
+      - DJANGO_SETTINGS_MODULE=api.settings
+      - FRONTEND_PORT=${FRONTEND_PORT}
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=secret
+  db:
+    image: postgres:latest
+    restart: unless-stopped
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=secret
+  nginx:
+    image: nginx:latest
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - ./conf/nginx-proxy.conf:/etc/nginx/conf.d/default.conf:ro
+      #- ./src/frontend/build:/opt/frontend:ro
+      #- ./src/backend:/opt/backend
+      - frontend:/opt/frontend
+    depends_on:
+      - backend    
+volumes:
+  pgdata:
+  frontend:

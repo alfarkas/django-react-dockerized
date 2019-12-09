@@ -58,7 +58,7 @@ services:
     volumes:
       - ./conf/nginx-proxy.conf:/etc/nginx/conf.d/default.conf:ro
       #- ./src/frontend/build:/opt/frontend:ro
-      #- ./src/backend:/opt/backend
+      - ./src/backend:/opt/backend
       - frontend:/opt/frontend
     depends_on:
       - backend    

@@ -7,6 +7,7 @@ services:
       context: .
       dockerfile: dockerfiles/react
     # entrypoint: /entrypoint.sh
+    command: npm start
     depends_on:
       -  backend
     #ports:
@@ -14,7 +15,7 @@ services:
     expose: 
       - "3000"
     volumes:
-      - frontend:/opt/frontend
+      - frontend:/frontend/src
     environment:
       - HOST=0.0.0.0
       - PORT=${FRONTEND_PORT}
@@ -59,7 +60,7 @@ services:
       - ./conf/nginx-proxy.conf:/etc/nginx/conf.d/default.conf:ro
       #- ./src/frontend/build:/opt/frontend:ro
       - ./src/backend:/opt/backend
-      - frontend:/opt/frontend
+      - ./src/frontend:/opt/frontend
     depends_on:
       - backend    
 volumes:

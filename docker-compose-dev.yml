@@ -15,7 +15,9 @@ services:
     expose: 
       - "3000"
     volumes:
-      - frontend:/frontend/src
+      - ./src/frontend/src:/usr/src/src
+      - ./src/frontend/public:/usr/src/public
+      - ./src/frontend/node_modules:/usr/src/node_modules
     environment:
       - HOST=0.0.0.0
       - PORT=${FRONTEND_PORT}
@@ -60,7 +62,7 @@ services:
       - ./conf/nginx-proxy.conf:/etc/nginx/conf.d/default.conf:ro
       #- ./src/frontend/build:/opt/frontend:ro
       - ./src/backend:/opt/backend
-      - ./src/frontend:/opt/frontend
+      #- ./src/frontend:/opt/frontend (just for prod)
     depends_on:
       - backend    
 volumes:

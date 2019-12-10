@@ -1,14 +1,11 @@
 FROM node:lts-alpine as prod
 
-WORKDIR /opt/frontend
+WORKDIR /usr/src/app/
 
 # copy both 'package.json' and 'package-lock.json' (if available)
-COPY src/frontend/package*.json ./
+COPY src/frontend/package*.json /usr/src/
 
 # install project dependencies
 RUN npm install
 
-COPY ./src/frontend/ .
-
 EXPOSE 3000
-RUN npm run build

@@ -24,11 +24,11 @@ Restart all containers:
 ## Backend
 Create a super-user:
 
-- `docker-compose -f docker-compose-dev.yml run backend django-admin createsuperuser`
+- `docker-compose -f docker-compose-dev.yml run backend createsuperuser`
 
 Collect static files:
 
-- `docker-compose -f docker-compose-dev.yml run backend django-admin collectstatic`
+- `docker-compose -f docker-compose-dev.yml run backend collectstatic`
 
 Apply migrations to the DB:
 

@@ -17,7 +17,7 @@ services:
     volumes:
       - ./src/frontend/src:/usr/src/src
       - ./src/frontend/public:/usr/src/public
-      - ./src/frontend/node_modules:/usr/src/node_modules
+      #- ./src/frontend/node_modules:/usr/src/node_modules
     environment:
       - HOST=0.0.0.0
       - PORT=${FRONTEND_PORT}

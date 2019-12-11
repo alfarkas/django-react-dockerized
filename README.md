@@ -5,6 +5,11 @@ Basic DRF + React app, using containers with Docker and Docker Compose.
 
 ## Containers
 ### Development
+
+Generate SSL certificates to enable HTTPS:
+- `cd ssl`
+- `./self_signed`
+
 Start and build the containers:
 
 - `docker-compose -f docker-compose-dev.yml build`

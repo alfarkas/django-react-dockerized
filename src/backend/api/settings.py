@@ -124,8 +124,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/static_files/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_files')
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
@@ -139,3 +139,5 @@ CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:%s' % os.getenv('FRONTEND_PORT')
 ]
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False

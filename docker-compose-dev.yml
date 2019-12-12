@@ -45,7 +45,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=secret
   db:
-    image: postgres:latest
+    image: postgres:12.1
     restart: unless-stopped
     volumes:
       - pgdata:/var/lib/postgresql/data/
@@ -54,7 +54,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=secret
   nginx:
-    image: nginx:latest
+    image: nginx:1.17.6
     restart: always
     ports:
       - 80:80

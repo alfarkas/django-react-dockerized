@@ -9,6 +9,8 @@ RUN apt-get update \
 RUN pip3 install pipenv
 
 WORKDIR /opt/backend
+RUN useradd -m container_user
+RUN chown -R container_user:container_user /opt/backend
 
 COPY Pipfile ./
 COPY Pipfile.lock ./
@@ -18,8 +20,8 @@ RUN pip install psycopg2-binary gunicorn
 COPY ./src/backend /opt/backend
 
 EXPOSE 8000
-ENTRYPOINT ["python", "manage.py"]
-CMD ["runserver", "0.0.0.0:8000"]
+#ENTRYPOINT ["python", "manage.py"]
+#CMD ["runserver", "0.0.0.0:8000"]
 
 # Uncomment to use Gunicorn
 # ENV GUNICORN_CMD_ARGS="--bind=0.0.0.0 --workers=3 --reload"

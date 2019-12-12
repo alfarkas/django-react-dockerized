@@ -2,7 +2,7 @@ version: '3'
 
 services:
   frontend:
-    user: "${UID}:${GID}"
+    #user: "${UID}:${GID}"
     build:
       context: .
       dockerfile: dockerfiles/react
@@ -25,7 +25,7 @@ services:
       - API_HOST=${BACKEND_RUNNING_ON}
       - API_PORT=${BACKEND_PORT}
   backend:
-    user: "${UID}:${GID}"
+    #user: "${UID}:${GID}"
     build:
       context: .
       dockerfile: dockerfiles/backend

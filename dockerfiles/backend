@@ -8,6 +8,8 @@ RUN apt-get update \
 RUN pip3 install pipenv
 
 WORKDIR /opt/backend
+RUN useradd -m container_user
+RUN chown -R container_user:container_user /opt/backend
 
 COPY Pipfile ./
 COPY Pipfile.lock ./

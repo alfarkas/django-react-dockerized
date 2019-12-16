@@ -8,6 +8,7 @@ services:
       dockerfile: dockerfiles/react
     # entrypoint: /entrypoint.sh
     command: npm run build
+    container_name: frontend
     depends_on:
       -  backend
     #ports:
@@ -30,6 +31,7 @@ services:
       context: .
       dockerfile: dockerfiles/backend
     command: gunicorn api.wsgi --bind=0.0.0.0
+    container_name: backend
     depends_on:
       - db
     #ports:
@@ -48,6 +50,7 @@ services:
   db:
     image: postgres:12.1
     restart: unless-stopped
+    container_name: database
     volumes:
       - pgdata:/var/lib/postgresql/data/
     environment:
@@ -57,6 +60,7 @@ services:
   nginx:
     image: nginx:1.17.6
     restart: always
+    container_name: nginx
     ports:
       - 80:80
       - "443:443"

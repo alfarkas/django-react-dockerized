@@ -1,0 +1,12 @@
+#!/bin/bash
+set -a
+[ -f .env ] && . .env
+
+cp ./src/frontend/package.json ./dockerfiles/
+cp ./src/frontend/package-lock.json ./dockerfiles/
+cp ./src/frontend/entrypoint.sh ./dockerfiles/entrypoint_frontend.sh
+
+cd dockerfiles
+docker build -f react -t hci/frontend:latest -t hci/frontend:production -t hci/frontend:production-`date +"%Y-%m-%d"` .
+rm ./dockerfiles/entrypoint_frontend.sh
+rm ./dockerfiles/package*.json

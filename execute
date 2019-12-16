@@ -1,0 +1,6 @@
+#!/bin/bash
+set -a
+[ -f .env ] && . .env
+
+# execute a command inside the running container
+docker-compose  -f ${DOCKER_COMPOSE_FILE} exec $1 ./entrypoint.sh ${@:1}

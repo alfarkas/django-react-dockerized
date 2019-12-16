@@ -29,7 +29,8 @@ services:
     build:
       context: .
       dockerfile: dockerfiles/backend
-    command: python manage.py runserver 0.0.0.0:8000
+    #image: hci/backend:latest
+    #command: python manage.py runserver 0.0.0.0:8000
     depends_on:
       - db
       - rabbitmq

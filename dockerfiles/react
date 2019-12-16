@@ -1,11 +1,15 @@
 FROM node:12.13.1-alpine3.9 as dev
 
-WORKDIR /usr/src/app/
+WORKDIR /usr/src/
 
 # copy both 'package.json' and 'package-lock.json' (if available)
-COPY src/frontend/package*.json /usr/src/
+COPY src/frontend/package.json /usr/src/
+COPY src/frontend/package-lock.json /usr/src/
 
 # install project dependencies
 RUN npm install
+
+COPY ./src/frontend/entrypoint_frontend.sh /usr/src/entrypoint.sh
+ENTRYPOINT ["/usr/src/entrypoint.sh"]
 
 EXPOSE 3000

@@ -62,8 +62,10 @@ services:
   # rabbit message queue
   rabbitmq:
     image: rabbitmq:3.8.2-alpine
+    container_name: rabbitmq
   celery_worker:
     <<: *backend
+    container_name: celery_worker
     command: celery -A api worker --loglevel=info
     ports: []
     depends_on: 

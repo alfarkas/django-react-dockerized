@@ -3,6 +3,10 @@ Basic DRF + React app, using containers with Docker and Docker Compose.
 
 # Basic commands
 
+You can run commands inside the containers using the 'execute' file, indicating the container destination: frontend/backend
+ - `./execute backend manage {command}`
+ - `./execute frontend install {package}`
+
 ## Containers
 ### Development
 
@@ -12,7 +16,8 @@ Generate SSL certificates to enable HTTPS:
 
 Start and build the containers:
 
-- `docker-compose -f docker-compose-dev.yml build`
+- `./build_backend`
+- `./build_frontend`
 
 If you want to build a specific container, just add the name it has in the docker-compose file at the end. 
 

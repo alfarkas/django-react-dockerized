@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import authentication, permissions
 from django.contrib.auth.models import User
-
+from sentry_sdk import capture_message
 
 class ListUsers(APIView):
     """
@@ -37,6 +37,8 @@ class UserViewSet(viewsets.ModelViewSet):
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
 
+# example of how to send an error report to sentry
+#capture_message("Error example!", level="error")
 
 urlpatterns = [
 

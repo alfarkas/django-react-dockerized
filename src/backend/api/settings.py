@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '_7!)3m55ph%7gf4(tu1!3lofue8u-92z9yoq1nb^r%ou54mm_9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'backend']
 
@@ -142,3 +144,11 @@ CORS_ORIGIN_WHITELIST = [
 ]
 CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_SECURE = False
+
+# override this setting in the local_settings with the corresponding 
+sentry_sdk.init(
+    dsn="https://e2775ea58ea34b90843daa496c22b068@sentry.io/1860009",
+    integrations=[DjangoIntegration()]
+)
+
+from api.local_settings import *

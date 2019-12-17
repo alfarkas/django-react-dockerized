@@ -15,6 +15,8 @@ django-cors-headers = "*"
 psycopg2-binary = "*"
 gunicorn = "*"
 celery = "*"
+sentry-sdk = "*"
+ipdb = "*"
 
 [requires]
 python_version = "3.7"

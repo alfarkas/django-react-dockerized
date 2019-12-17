@@ -3,10 +3,10 @@ version: '3'
 services:
   frontend:
     #user: "${UID}:${GID}"
-    image: hci/frontend:late
-    build:
-      context: .
-      dockerfile: dockerfiles/react
+    image: hci/frontend:latest
+    # build:
+    #   context: .
+    #   dockerfile: dockerfiles/react
     # entrypoint: /entrypoint.sh
     command: npm run build
     container_name: frontend

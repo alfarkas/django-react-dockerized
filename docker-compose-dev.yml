@@ -81,13 +81,13 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 50M
-        reservations:
-          cpus: '0.25'
-          memory: 20M
+      # resources:
+      #   limits:
+      #     cpus: '0.50'
+      #     memory: 50M
+      #   reservations:
+      #     cpus: '0.25'
+      #     memory: 20M
   nginx:
     image: nginx:1.17.6
     restart: always

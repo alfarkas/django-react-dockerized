@@ -8,6 +8,7 @@ services:
       dockerfile: dockerfiles/react
     # entrypoint: /entrypoint.sh
     command: npm start
+    container_name: frontend
     depends_on:
       -  backend
     #ports:
@@ -34,6 +35,7 @@ services:
       #dockerfile: dockerfiles/backend
     #image: hci/backend:latest
     #command: python manage.py runserver 0.0.0.0:8000
+    container_name: backend
     depends_on:
       - db
       - rabbitmq
@@ -54,6 +56,7 @@ services:
   db:
     image: postgres:12.1
     restart: unless-stopped
+    container_name: database
     volumes:
       - pgdata:/var/lib/postgresql/data/
     environment:
@@ -63,9 +66,14 @@ services:
   # rabbit message queue
   rabbitmq:
     image: rabbitmq:3.8.2-alpine
+    container_name: rabbitmq
   celery_worker:
     <<: *backend
+<<<<<<< HEAD
     image: hci/backend:latest
+=======
+    container_name: celery_worker
+>>>>>>> 1a8e58663450d13d15bab19b95f097f7454e9484
     command: celery -A api worker --loglevel=info
     ports: []
     depends_on: 
@@ -74,6 +82,7 @@ services:
   nginx:
     image: nginx:1.17.6
     restart: always
+    container_name: nginx
     ports:
       - 80:80
       - "443:443"

@@ -13,3 +13,5 @@ ssl/*.key
 ssl/*.csr
 
 .cache
+
+local_settings.py

@@ -13,6 +13,8 @@ You can run commands inside the containers using the 'execute' file, indicating 
 Generate SSL certificates to enable HTTPS:
 - `cd ssl`
 - `./self_signed`
+- Delete the folders created
+- Run it again `./self_signed`
 
 Start and build the containers:
 

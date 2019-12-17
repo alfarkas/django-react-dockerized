@@ -69,11 +69,8 @@ services:
     container_name: rabbitmq
   celery_worker:
     <<: *backend
-<<<<<<< HEAD
     image: hci/backend:latest
-=======
     container_name: celery_worker
->>>>>>> 1a8e58663450d13d15bab19b95f097f7454e9484
     command: celery -A api worker --loglevel=info
     ports: []
     depends_on: 

@@ -3,6 +3,7 @@ version: '3'
 services:
   frontend:
     #user: "${UID}:${GID}"
+    image: hci/frontend:late
     build:
       context: .
       dockerfile: dockerfiles/react

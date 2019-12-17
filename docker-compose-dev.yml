@@ -2,7 +2,7 @@ version: '3'
 
 services:
   frontend:
-    user: "${UID}:${GID}"
+    #user: "${UID}:${GID}"
     build:
       context: .
       dockerfile: dockerfiles/react
@@ -16,8 +16,10 @@ services:
       - "3000"
     volumes:
       - ./src/frontend/src:/usr/src/src
+      - frontend:/usr/src/
       - ./src/frontend/public:/usr/src/public
       #- ./src/frontend/node_modules:/usr/src/node_modules
+      - front_node_modules:/usr/src/node_modules
     environment:
       - HOST=0.0.0.0
       - PORT=${FRONTEND_PORT}
@@ -25,10 +27,11 @@ services:
       - API_HOST=${BACKEND_RUNNING_ON}
       - API_PORT=${BACKEND_PORT}
   backend: &backend
-    user: "${UID}:${GID}"
-    build:
-      context: .
-      dockerfile: dockerfiles/backend
+    #user: "${UID}:${GID}"
+    image: hci/backend:latest
+    #build:
+      #context: .
+      #dockerfile: dockerfiles/backend
     #image: hci/backend:latest
     #command: python manage.py runserver 0.0.0.0:8000
     depends_on:
@@ -62,6 +65,7 @@ services:
     image: rabbitmq:3.8.2-alpine
   celery_worker:
     <<: *backend
+    image: hci/backend:latest
     command: celery -A api worker --loglevel=info
     ports: []
     depends_on: 
@@ -85,3 +89,14 @@ services:
 volumes:
   pgdata:
   frontend:
+    driver: local
+    driver_opts:
+      type: none
+      device: $PWD/src/frontend/
+      o: bind
+  front_node_modules:
+    driver: local
+    driver_opts:
+      type: none
+      device: $PWD/src/frontend/node_modules
+      o: bind

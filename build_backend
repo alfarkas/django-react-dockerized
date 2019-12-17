@@ -5,10 +5,11 @@ set -a
 cp Pipfile ./dockerfiles/
 cp Pipfile.lock ./dockerfiles/
 
-cp ./src/backend/entrypoint.sh /dockerfiles/entrypoint_backend.sh
+cp ./src/backend/entrypoint.sh ./dockerfiles/entrypoint_backend.sh
 
 cd dockerfiles
 docker build --no-cache -f backend -t hci/backend:latest -t hci/backend:production -t hci/backend:production-`date +"%Y-%m-%d"` .
-rm ./dockerfiles/entrypoint_backend.sh
-rm ./dockerfiles/Pipfile
-rm ./dockerfiles/Pipfile.lock
+
+rm entrypoint_backend.sh
+rm Pipfile
+rm Pipfile.lock

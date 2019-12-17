@@ -8,5 +8,6 @@ cp ./src/frontend/entrypoint.sh ./dockerfiles/entrypoint_frontend.sh
 
 cd dockerfiles
 docker build -f react -t hci/frontend:latest -t hci/frontend:production -t hci/frontend:production-`date +"%Y-%m-%d"` .
-rm ./dockerfiles/entrypoint_frontend.sh
-rm ./dockerfiles/package*.json
+
+rm entrypoint_frontend.sh
+rm package*.json

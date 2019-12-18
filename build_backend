@@ -8,7 +8,7 @@ cp Pipfile.lock ./dockerfiles/
 cp ./src/backend/entrypoint.sh ./dockerfiles/entrypoint_backend.sh
 
 cd dockerfiles
-docker build -f backend -t hci/backend:latest -t hci/backend:production -t hci/backend:production-`date +"%Y-%m-%d"` .
+docker build $1 -f backend -t hci/backend:latest -t hci/backend:production -t hci/backend:production-`date +"%Y-%m-%d"` .
 
 rm entrypoint_backend.sh
 rm Pipfile

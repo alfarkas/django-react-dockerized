@@ -30,6 +30,7 @@ services:
       - API_PORT=${BACKEND_PORT}
   backend: &backend
     #user: "${UID}:${GID}"
+    user: "container_user:container_user"
     image: hci/backend:latest
     #build:
       #context: .

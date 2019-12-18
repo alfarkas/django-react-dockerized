@@ -68,19 +68,23 @@ services:
   rabbitmq:
     image: rabbitmq:3.8.2-alpine
     container_name: rabbitmq
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "5672" ]
+      interval: 5s
+      timeout: 15s
+      retries: 1
   celery_worker:
     <<: *backend
-    image: hci/backend:latest
     container_name: celery_worker
     command: celery -A api worker --loglevel=info
     ports: []
     depends_on: 
       - rabbitmq
       - db
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
+    # deploy:
+    #   replicas: 1
+    #   restart_policy:
+    #     condition: on-failure
       # resources:
       #   limits:
       #     cpus: '0.50'
@@ -88,6 +92,14 @@ services:
       #   reservations:
       #     cpus: '0.25'
       #     memory: 20M
+  celery_beat:
+    <<: *backend
+    container_name: celery_beat
+    command: celery -A api beat --loglevel=info
+    ports: []
+    depends_on: 
+      - rabbitmq
+      - db
   nginx:
     image: nginx:1.17.6
     restart: always

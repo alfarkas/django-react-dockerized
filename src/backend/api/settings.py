@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.celery import CeleryIntegration
+from celery.schedules import crontab
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -41,6 +43,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+
+    #project apps
+    'test',
+
 ]
 
 MIDDLEWARE = [
@@ -108,7 +114,18 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# celery config
 CELERY_BROKER_URL = "amqp://rabbitmq"
+CELERY_RESULT_BACKEND = "rpc://rabbitmq"
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_BEAT_SCHEDULE = {
+    'hello': {
+        'task': 'test.tasks.hello',
+        'schedule': crontab()  # execute every minute
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -147,8 +164,8 @@ SESSION_COOKIE_SECURE = False
 
 # override this setting in the local_settings with the corresponding 
 sentry_sdk.init(
-    dsn="https://e2775ea58ea34b90843daa496c22b068@sentry.io/1860009",
-    integrations=[DjangoIntegration()]
+    dsn=os.getenv('SENTRY_DSN'),
+    integrations=[DjangoIntegration(),CeleryIntegration()]
 )
 
 from api.local_settings import *

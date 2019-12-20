@@ -38,6 +38,8 @@ services:
     #image: hci/backend:latest
     #command: python manage.py runserver 0.0.0.0:8000
     container_name: backend
+    tty: true
+    stdin_open: true
     depends_on:
       - db
       - rabbitmq

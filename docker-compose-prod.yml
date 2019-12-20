@@ -2,7 +2,7 @@ version: '3'
 
 services:
   frontend:
-    #user: "${UID}:${GID}"
+    user: "container_user:container_user"
     image: hci/frontend:latest
     # build:
     #   context: .
@@ -27,7 +27,7 @@ services:
       - API_HOST=${BACKEND_RUNNING_ON}
       - API_PORT=${BACKEND_PORT}
   backend: &backend
-    #user: "${UID}:${GID}"
+    user: "container_user:container_user"
     build:
       context: .
       dockerfile: dockerfiles/backend
@@ -72,7 +72,7 @@ services:
   celery_worker:
     <<: *backend
     container_name: celery_worker
-    command: celery -A api worker --loglevel=info
+    command: celery -A api worker --loglevel=info --sentry ${SENTRY_DSN}
     ports: []
     depends_on: 
       - rabbitmq
@@ -91,7 +91,7 @@ services:
   celery_beat:
     <<: *backend
     container_name: celery_beat
-    command: celery -A api beat --loglevel=info
+    command: celery -A api beat --loglevel=info --sentry ${SENTRY_DSN}
     ports: []
     depends_on: 
       - rabbitmq

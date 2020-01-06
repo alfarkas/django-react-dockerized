@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'corsheaders',
 
     #project apps
-    'test',
 
 ]
 
@@ -121,10 +120,10 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULE = {
-    'hello': {
-        'task': 'test.tasks.hello',
-        'schedule': crontab()  # execute every minute
-    }
+    # 'cron_name': {
+    #     'task': 'app_name.module_name.function_name',
+    #     'schedule': crontab()  # execute every minute
+    # }
 }
 
 # Internationalization

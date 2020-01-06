@@ -24,8 +24,8 @@ services:
     user: "container_user:container_user"
     image: hci/backend:latest
     container_name: backend
-    # tty: true
-    # stdin_open: true
+    tty: true
+    stdin_open: true
     depends_on:
       - db
       - rabbitmq
@@ -64,6 +64,8 @@ services:
     container_name: celery_worker
     command: celery -A project worker --loglevel=info --sentry ${SENTRY_DSN}
     ports: []
+    tty: false
+    stdin_open: false
     depends_on: 
       - rabbitmq
       - db
@@ -72,6 +74,8 @@ services:
     container_name: celery_beat
     command: celery -A project beat --loglevel=info --sentry ${SENTRY_DSN}
     ports: []
+    tty: false
+    stdin_open: false
     depends_on: 
       - rabbitmq
       - db

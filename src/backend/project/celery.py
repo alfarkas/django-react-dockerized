@@ -7,9 +7,9 @@ import sentry_sdk
 from sentry_sdk.integrations.celery import CeleryIntegration
 
 # set the default Django settings module for the 'celery' program.
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'api.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project.settings')
 
-app = Celery('api')
+app = Celery('project')
 
 #def add_worker_arguments(parser):
 #    parser.add_argument(

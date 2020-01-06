@@ -25,4 +25,4 @@ CMD ["manage", "runserver", "0.0.0.0:8000"]
 
 # Uncomment to use Gunicorn
 # ENV GUNICORN_CMD_ARGS="--bind=0.0.0.0 --workers=3 --reload"
-# CMD ["gunicorn", "api.wsgi"]
+# CMD ["gunicorn", "project.wsgi"]

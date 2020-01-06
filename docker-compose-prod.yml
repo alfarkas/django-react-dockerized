@@ -31,7 +31,7 @@ services:
     build:
       context: .
       dockerfile: dockerfiles/backend
-    command: gunicorn api.wsgi --bind=0.0.0.0
+    command: gunicorn project.wsgi --bind=0.0.0.0
     container_name: backend
     depends_on:
       - db
@@ -45,7 +45,7 @@ services:
       - ./src/backend:/opt/backend
     environment:
       - PYTHONPATH=/opt/backend
-      - DJANGO_SETTINGS_MODULE=api.settings
+      - DJANGO_SETTINGS_MODULE=project.settings
       - FRONTEND_PORT=${FRONTEND_PORT}
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
@@ -72,7 +72,7 @@ services:
   celery_worker:
     <<: *backend
     container_name: celery_worker
-    command: celery -A api worker --loglevel=info
+    command: celery -A project worker --loglevel=info
     ports: []
     depends_on: 
       - rabbitmq
@@ -91,7 +91,7 @@ services:
   celery_beat:
     <<: *backend
     container_name: celery_beat
-    command: celery -A api beat --loglevel=info
+    command: celery -A project beat --loglevel=info
     ports: []
     depends_on: 
       - rabbitmq

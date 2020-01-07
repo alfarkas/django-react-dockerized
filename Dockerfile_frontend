@@ -19,7 +19,6 @@ ENTRYPOINT ["/usr/src/entrypoint.sh"]
 EXPOSE 3000
 
 RUN npm run build 
-# npm run build --dir=/src/frontend/build
 
 FROM nginx:1.17.6 as prod
 

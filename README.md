@@ -36,12 +36,12 @@ Restart all containers:
 ## Backend
 Create a super-user:
 
-- `docker-compose -f docker-compose-dev.yml run backend createsuperuser`
+- `./execute backend manage createsuperuser`
 
 Collect static files:
 
-- `docker-compose -f docker-compose-dev.yml run backend collectstatic`
+- `./execute backend manage collectstatic`
 
 Apply migrations to the DB:
 
-- `docker-compose -f docker-compose-dev.yml run backend migrate`
+- `./execute backend manage migrate`

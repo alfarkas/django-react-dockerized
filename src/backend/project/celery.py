@@ -29,9 +29,6 @@ class CustomArgs(bootsteps.Step):
 
     def __init__(self, worker_beat, dsn, **options):
         # initialize sentry for celery
-        print(dsn)
-        print(type(dsn))
-        print(options)
         if dsn:
             sentry_sdk.init(dsn[0], integrations=[CeleryIntegration()])
 

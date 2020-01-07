@@ -16,7 +16,7 @@ COPY Pipfile.lock ./
 RUN pipenv install --system
 
 # Copy entrypoint
-COPY entrypoint_backend.sh ./entrypoint.sh
+COPY src/backend/entrypoint.sh ./entrypoint.sh
 
 EXPOSE 8000
 

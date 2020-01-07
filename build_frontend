@@ -2,16 +2,8 @@
 set -a
 [ -f .env ] && . .env
 
-cp ./src/frontend/package.json ./dockerfiles/
-cp ./src/frontend/package-lock.json ./dockerfiles/
-cp ./src/frontend/entrypoint.sh ./dockerfiles/entrypoint_frontend.sh
-
 if [ ! -d ./src/frontend/node_modules ]; then
     mkdir ./src/frontend/node_modules
 fi
 
-cd dockerfiles
-docker build $1 -f react -t hci/frontend:latest -t hci/frontend:production -t hci/frontend:production-`date +"%Y-%m-%d"` .
-
-rm entrypoint_frontend.sh
-rm package*.json
+docker build $1 -f Dockerfile_frontend -t hci/frontend:latest -t hci/frontend:production -t hci/frontend:production-`date +"%Y-%m-%d"` .

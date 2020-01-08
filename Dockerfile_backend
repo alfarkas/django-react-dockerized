@@ -16,13 +16,9 @@ COPY Pipfile.lock ./
 RUN pipenv install --system
 
 # Copy entrypoint
-COPY entrypoint_backend.sh ./entrypoint.sh
+COPY src/backend/entrypoint.sh ./entrypoint.sh
 
 EXPOSE 8000
 
 ENTRYPOINT ["/opt/backend/entrypoint.sh"]
 CMD ["manage", "runserver", "0.0.0.0:8000"]
-
-# Uncomment to use Gunicorn
-# ENV GUNICORN_CMD_ARGS="--bind=0.0.0.0 --workers=3 --reload"
-# CMD ["gunicorn", "api.wsgi"]

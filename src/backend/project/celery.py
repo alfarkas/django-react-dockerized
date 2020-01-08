@@ -7,9 +7,9 @@ import sentry_sdk
 from sentry_sdk.integrations.celery import CeleryIntegration
 
 # set the default Django settings module for the 'celery' program.
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'api.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project.settings')
 
-app = Celery('api')
+app = Celery('project')
 
 #def add_worker_arguments(parser):
 #    parser.add_argument(
@@ -29,9 +29,6 @@ class CustomArgs(bootsteps.Step):
 
     def __init__(self, worker_beat, dsn, **options):
         # initialize sentry for celery
-        print(dsn)
-        print(type(dsn))
-        print(options)
         if dsn:
             sentry_sdk.init(dsn[0], integrations=[CeleryIntegration()])
 

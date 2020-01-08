@@ -2,25 +2,17 @@ version: '3.7'
 
 services:
   frontend:
-    #user: "container_user:container_user"
     image: hci/frontend:latest
-    # build:
-    #   context: .
-    #   dockerfile: dockerfiles/react
-    # entrypoint: /entrypoint.sh
     command: npm start
     container_name: frontend
     depends_on:
       -  backend
-    #ports:
-    #  - "${FRONTEND_PORT}:3000"
     expose: 
       - "3000"
     volumes:
       - ./src/frontend/src:/usr/src/src
       - frontend:/usr/src/
       - ./src/frontend/public:/usr/src/public
-      #- ./src/frontend/node_modules:/usr/src/node_modules
       - front_node_modules:/usr/src/node_modules
     environment:
       - HOST=0.0.0.0
@@ -29,21 +21,15 @@ services:
       - API_HOST=${BACKEND_RUNNING_ON}
       - API_PORT=${BACKEND_PORT}
   backend: &backend
-    #user: "${UID}:${GID}"
     user: "container_user:container_user"
     image: hci/backend:latest
-    #build:
-      #context: .
-      #dockerfile: dockerfiles/backend
-    #image: hci/backend:latest
-    #command: python manage.py runserver 0.0.0.0:8000
     container_name: backend
+    tty: true
+    stdin_open: true
     depends_on:
       - db
       - rabbitmq
       - celery_worker
-    #ports:
-    #  - "${BACKEND_PORT}:8000"
     expose: 
       - "8000"
     volumes:
@@ -52,7 +38,7 @@ services:
       - sentry
     environment:
       - PYTHONPATH=/opt/backend
-      - DJANGO_SETTINGS_MODULE=api.settings
+      - DJANGO_SETTINGS_MODULE=project.settings
       - FRONTEND_PORT=${FRONTEND_PORT}
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
@@ -68,7 +54,6 @@ services:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=secret
-  # rabbit message queue
   rabbitmq:
     image: rabbitmq:3.8.2-alpine
     container_name: rabbitmq
@@ -80,13 +65,10 @@ services:
   celery_worker:
     <<: *backend
     container_name: celery_worker
-    command: celery -A api worker --loglevel=info --sentry ${SENTRY_DSN}
+    command: celery -A project worker --loglevel=info --sentry ${SENTRY_DSN}
     ports: []
     secrets:
       - sentry
-    depends_on: 
-      - rabbitmq
-      - db
     deploy:
       replicas: 2
       restart_policy:
@@ -98,13 +80,20 @@ services:
         reservations:
           cpus: '0.25'
           memory: 20M
+    tty: false
+    stdin_open: false
+    depends_on: 
+      - rabbitmq
+      - db
   celery_beat:
     <<: *backend
     container_name: celery_beat
-    command: celery -A api beat --loglevel=info --sentry ${SENTRY_DSN}
+    command: celery -A project beat --loglevel=info --sentry ${SENTRY_DSN}
     ports: []
     secrets:
       - sentry
+    tty: false
+    stdin_open: false
     depends_on: 
       - rabbitmq
       - db
@@ -117,11 +106,9 @@ services:
       - "443:443"
     volumes:
       - ./conf/nginx-proxy-dev.conf:/etc/nginx/conf.d/default.conf:ro
-      #- ./src/frontend/build:/opt/frontend:ro
       - ./src/backend:/opt/backend
       - ./ssl/concatenated.cer:/etc/ssl/concatenated.cer
       - ./ssl/private_key.key:/etc/ssl/private_key.key
-      #- ./src/frontend:/opt/frontend (just for prod)
     depends_on:
       - backend    
 volumes:

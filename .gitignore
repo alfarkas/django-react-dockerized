@@ -15,3 +15,5 @@ ssl/*.csr
 .cache
 
 local_settings.py
+celerybeat-schedule
+celerybeat.pid

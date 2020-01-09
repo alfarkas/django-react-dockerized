@@ -167,4 +167,4 @@ sentry_sdk.init(
     integrations=[DjangoIntegration(),CeleryIntegration()]
 )
 
-from project.local_settings import *
+from .local_settings import *

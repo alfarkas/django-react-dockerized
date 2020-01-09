@@ -6,8 +6,8 @@ set -a
 if [ $1 = "frontend" ]
 then
     shift
-    docker-compose  -f ${DOCKER_COMPOSE_FILE} exec frontend ./entrypoint.sh ${@:1}
+    docker exec -ti $(docker container ls | grep frontend | xargs | awk '{print $NF}') ./entrypoint.sh ${@:1}
 else
     shift
-    docker-compose  -f ${DOCKER_COMPOSE_FILE} exec backend ./entrypoint.sh ${@:1}
+    docker exec -ti $(docker container ls | grep backend | xargs | awk '{print $NF}') ./entrypoint.sh ${@:1}
 fi

@@ -1,6 +1,10 @@
 #!/bin/bash
 echo $@
 #exec pipenv --venv
+if [ $1 = "start_celery" ]
+then
+    exec celery -A project $2 --loglevel=info --sentry "$(cat /run/secrets/sentry)"
+fi
 if [ $1 = "start" ]
 then
     exec pwd

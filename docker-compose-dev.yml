@@ -43,7 +43,8 @@ services:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=secret
-      - SENTRY_DSN=/run/secrets/sentry
+      - SENTRY_DSN_FILE=/run/secrets/sentry
+      # - SENTRY_DSN=https://e2775ea58ea34b90843daa496c22b068@sentry.io/1860009
   db:
     image: postgres:12.1
     restart: unless-stopped
@@ -65,10 +66,20 @@ services:
   celery_worker:
     <<: *backend
     container_name: celery_worker
-    command: celery -A project worker --loglevel=info --sentry ${SENTRY_DSN}
-    ports: []
     secrets:
       - sentry
+    environment:
+      - PYTHONPATH=/opt/backend
+      - DJANGO_SETTINGS_MODULE=project.settings
+      - FRONTEND_PORT=${FRONTEND_PORT}
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=secret
+      - SENTRY_DSN_FILE=/run/secrets/sentry
+    command: start_celery worker
+    ports: []
+    # secrets:
+    #   - sentry
     deploy:
       replicas: 2
       restart_policy:
@@ -88,10 +99,10 @@ services:
   celery_beat:
     <<: *backend
     container_name: celery_beat
-    command: celery -A project beat --loglevel=info --sentry ${SENTRY_DSN}
+    command: start_celery beat
     ports: []
-    secrets:
-      - sentry
+    # secrets:
+    #   - sentry
     tty: false
     stdin_open: false
     depends_on: 

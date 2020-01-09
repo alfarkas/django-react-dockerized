@@ -17,3 +17,5 @@ ssl/*.csr
 local_settings.py
 celerybeat-schedule
 celerybeat.pid
+
+.env

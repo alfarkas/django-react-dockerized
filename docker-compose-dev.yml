@@ -40,11 +40,10 @@ services:
       - PYTHONPATH=/opt/backend
       - DJANGO_SETTINGS_MODULE=project.settings
       - FRONTEND_PORT=${FRONTEND_PORT}
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - SENTRY_DSN_FILE=/run/secrets/sentry
-      # - SENTRY_DSN=https://e2775ea58ea34b90843daa496c22b068@sentry.io/1860009
   db:
     image: postgres:12.1
     restart: unless-stopped
@@ -52,9 +51,9 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
   rabbitmq:
     image: rabbitmq:3.8.2-alpine
     container_name: rabbitmq
@@ -66,20 +65,8 @@ services:
   celery_worker:
     <<: *backend
     container_name: celery_worker
-    secrets:
-      - sentry
-    environment:
-      - PYTHONPATH=/opt/backend
-      - DJANGO_SETTINGS_MODULE=project.settings
-      - FRONTEND_PORT=${FRONTEND_PORT}
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=secret
-      - SENTRY_DSN_FILE=/run/secrets/sentry
     command: start_celery worker
     ports: []
-    # secrets:
-    #   - sentry
     deploy:
       replicas: 2
       restart_policy:
@@ -101,8 +88,6 @@ services:
     container_name: celery_beat
     command: start_celery beat
     ports: []
-    # secrets:
-    #   - sentry
     tty: false
     stdin_open: false
     depends_on: 

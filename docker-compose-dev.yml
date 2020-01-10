@@ -36,13 +36,18 @@ services:
       - ./src/backend:/opt/backend
     secrets:
       - sentry
+      - postgres_db
+      - postgres_usr
+      - postgres_pswd
+    env_file:
+      - .env
     environment:
       - PYTHONPATH=/opt/backend
       - DJANGO_SETTINGS_MODULE=project.settings
       - FRONTEND_PORT=${FRONTEND_PORT}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB_FILE=/run/secrets/postgres_db
+      - POSTGRES_USER_FILE=/run/secrets/postgres_usr
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_pswd
       - SENTRY_DSN_FILE=/run/secrets/sentry
   db:
     image: postgres:12.1
@@ -50,10 +55,14 @@ services:
     container_name: database
     volumes:
       - pgdata:/var/lib/postgresql/data/
+    secrets:
+      - postgres_db
+      - postgres_usr
+      - postgres_pswd
     environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB_FILE=/run/secrets/postgres_db
+      - POSTGRES_USER_FILE=/run/secrets/postgres_usr
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_pswd
   rabbitmq:
     image: rabbitmq:3.8.2-alpine
     container_name: rabbitmq
@@ -125,3 +134,9 @@ volumes:
 secrets:
   sentry:
     file: secret_sentry.txt
+  postgres_db:
+    file: secret_pst_db.txt
+  postgres_usr:
+    file: secret_pst_usr.txt
+  postgres_pswd:
+    file: secret_pst_pswd.txt

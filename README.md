@@ -7,6 +7,9 @@ You can run commands inside the containers using the 'execute' file, indicating 
  - `./execute backend manage {command}`
  - `./execute frontend install {package}`
 
+# Befor start
+- Create a .env with the variables of the .env.example and complete the blanks with values.
+
 ## Containers
 ### Development
 

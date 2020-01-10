@@ -1,5 +1,5 @@
 # About me
-Basic DRF + React app, using containers with Docker and Docker Compose.
+Basic DRF + React app, using containers with Docker and Docker Compose in a single local Swarm node.
 
 # Basic commands
 
@@ -13,25 +13,32 @@ You can run commands inside the containers using the 'execute' file, indicating 
 Generate SSL certificates to enable HTTPS:
 - `cd ssl`
 - `./self_signed`
-- Delete the folders created
-- Run it again `./self_signed`
+- (if it doesn't work) 
+   - Delete the folders created
+   - Run it again `./self_signed`
 
 Start and build the containers:
 
 - `./build_backend`
 - `./build_frontend`
 
-If you want to build a specific container, just add the name it has in the docker-compose file at the end. 
+Initialize the swarm
+
+ `docker swarm init`
 
 e.g. `docker-compose -f docker-compose-dev.yml build frontend`
 
-Start all containers:
+Start the stack:
 
-- `docker-compose -f docker-compose-dev.yml up`
+- `docker stack deploy -c docker-compose-dev.yml nameOfStack`
 
-Restart all containers:
+Take down the stack:
 
-- `docker-compose -f docker-compose-dev.yml restart`
+- `docker stack rm nameOfStack`
+
+Scale a service (most likely celery workers):
+
+- `docker service scale nameOfService=Amount`
 
 ## Backend
 Create a super-user:

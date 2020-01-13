@@ -133,10 +133,10 @@ volumes:
 
 secrets:
   sentry:
-    file: secret_sentry.txt
+    file: secrets/sentry.txt
   postgres_db:
-    file: secret_pst_db.txt
+    file: secrets/pst_db.txt
   postgres_usr:
-    file: secret_pst_usr.txt
+    file: secrets/pst_usr.txt
   postgres_pswd:
-    file: secret_pst_pswd.txt
+    file: secrets/pst_pswd.txt

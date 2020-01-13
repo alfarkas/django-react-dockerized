@@ -1,41 +1,46 @@
-version: '3'
+version: '3.7'
 
 services:
   backend: &backend
     user: "container_user:container_user"
     image: hci/backend:latest
     command: gunicorn project.wsgi --bind=0.0.0.0
-    container_name: backend
     tty: true
     stdin_open: true
-    depends_on:
-      - db
-      - rabbitmq
-      - celery_worker
-    expose: 
-      - "8000"
     volumes:
       - ./src/backend:/opt/backend
+    secrets:
+      - sentry
+      - postgres_db
+      - postgres_usr
+      - postgres_pswd
+    env_file:
+      - .env
     environment:
       - PYTHONPATH=/opt/backend
       - DJANGO_SETTINGS_MODULE=project.settings
       - FRONTEND_PORT=${FRONTEND_PORT}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB_FILE=/run/secrets/postgres_db
+      - POSTGRES_USER_FILE=/run/secrets/postgres_usr
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_pswd
+      - SENTRY_DSN_FILE=/run/secrets/sentry
   db:
     image: postgres:12.1
-    restart: unless-stopped
-    container_name: database
+    deploy:
+      restart_policy:
+        condition: on-failure
     volumes:
       - pgdata:/var/lib/postgresql/data/
+    secrets:
+      - postgres_db
+      - postgres_usr
+      - postgres_pswd
     environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB_FILE=/run/secrets/postgres_db
+      - POSTGRES_USER_FILE=/run/secrets/postgres_usr
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_pswd
   rabbitmq:
     image: rabbitmq:3.8.2-alpine
-    container_name: rabbitmq
     healthcheck:
       test: [ "CMD", "nc", "-z", "localhost", "5672" ]
       interval: 5s
@@ -43,28 +48,25 @@ services:
       retries: 1
   celery_worker:
     <<: *backend
-    container_name: celery_worker
     command: celery -A api worker --loglevel=info --sentry ${SENTRY_DSN}
-    ports: []
+    deploy:
+      restart_policy:
+        condition: on-failure
     tty: false
     stdin_open: false
-    depends_on: 
-      - rabbitmq
-      - db
   celery_beat:
     <<: *backend
-    container_name: celery_beat
     command: celery -A api beat --loglevel=info --sentry ${SENTRY_DSN}
-    ports: []
+    deploy:
+      restart_policy:
+        condition: on-failure
     tty: false
     stdin_open: false
-    depends_on: 
-      - rabbitmq
-      - db
   nginx:
     image: hci/frontend:latest
-    restart: always
-    container_name: nginx
+    deploy:
+      restart_policy:
+        condition: on-failure
     ports:
       - 80:80
       - "443:443"
@@ -78,3 +80,13 @@ services:
       - backend    
 volumes:
   pgdata:
+
+secrets:
+  sentry:
+    file: secrets/sentry.txt
+  postgres_db:
+    file: secrets/pst_db.txt
+  postgres_usr:
+    file: secrets/pst_usr.txt
+  postgres_pswd:
+    file: secrets/pst_pswd.txt

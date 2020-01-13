@@ -4,11 +4,6 @@ services:
   frontend:
     image: hci/frontend:latest
     command: npm start
-    container_name: frontend
-    depends_on:
-      -  backend
-    expose: 
-      - "3000"
     volumes:
       - ./src/frontend/src:/usr/src/src
       - frontend:/usr/src/
@@ -23,15 +18,8 @@ services:
   backend: &backend
     user: "container_user:container_user"
     image: hci/backend:latest
-    container_name: backend
     tty: true
     stdin_open: true
-    depends_on:
-      - db
-      - rabbitmq
-      - celery_worker
-    expose: 
-      - "8000"
     volumes:
       - ./src/backend:/opt/backend
     secrets:
@@ -51,8 +39,9 @@ services:
       - SENTRY_DSN_FILE=/run/secrets/sentry
   db:
     image: postgres:12.1
-    restart: unless-stopped
-    container_name: database
+    deploy:
+      restart_policy:
+        condition: on-failure
     volumes:
       - pgdata:/var/lib/postgresql/data/
     secrets:
@@ -65,7 +54,6 @@ services:
       - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_pswd
   rabbitmq:
     image: rabbitmq:3.8.2-alpine
-    container_name: rabbitmq
     healthcheck:
       test: [ "CMD", "nc", "-z", "localhost", "5672" ]
       interval: 5s
@@ -73,9 +61,7 @@ services:
       retries: 1
   celery_worker:
     <<: *backend
-    container_name: celery_worker
     command: start_celery worker
-    ports: []
     deploy:
       replicas: 2
       restart_policy:
@@ -89,23 +75,19 @@ services:
           memory: 20M
     tty: false
     stdin_open: false
-    depends_on: 
-      - rabbitmq
-      - db
   celery_beat:
     <<: *backend
-    container_name: celery_beat
     command: start_celery beat
-    ports: []
+    deploy:
+      restart_policy:
+        condition: on-failure
     tty: false
     stdin_open: false
-    depends_on: 
-      - rabbitmq
-      - db
   nginx:
     image: nginx:1.17.6
-    restart: always
-    container_name: nginx
+    deploy:
+      restart_policy:
+        condition: on-failure
     ports:
       - 80:80
       - "443:443"
@@ -114,8 +96,6 @@ services:
       - ./src/backend:/opt/backend
       - ./ssl/concatenated.cer:/etc/ssl/concatenated.cer
       - ./ssl/private_key.key:/etc/ssl/private_key.key
-    depends_on:
-      - backend    
 volumes:
   pgdata:
   frontend:

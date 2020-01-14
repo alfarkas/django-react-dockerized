@@ -4,7 +4,7 @@ services:
   backend: &backend
     user: "container_user:container_user"
     image: hci/backend:latest
-    command: gunicorn project.wsgi --bind=0.0.0.0
+    command: gunicorn project.wsgi --bind=0.0.0.0:8000 --workers=8
     tty: true
     stdin_open: true
     volumes:

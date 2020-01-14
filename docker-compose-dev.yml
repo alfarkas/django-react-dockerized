@@ -27,6 +27,7 @@ services:
       - postgres_db
       - postgres_usr
       - postgres_pswd
+      - postgres_host
     env_file:
       - .env
     environment:

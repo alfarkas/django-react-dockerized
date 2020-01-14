@@ -33,6 +33,7 @@ services:
       - PYTHONPATH=/opt/backend
       - DJANGO_SETTINGS_MODULE=project.settings
       - FRONTEND_PORT=${FRONTEND_PORT}
+      - POSTGRES_HOST_FILE=/run/secrets/postgres_host
       - POSTGRES_DB_FILE=/run/secrets/postgres_db
       - POSTGRES_USER_FILE=/run/secrets/postgres_usr
       - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_pswd
@@ -120,3 +121,5 @@ secrets:
     file: secrets/pst_usr.txt
   postgres_pswd:
     file: secrets/pst_pswd.txt
+  postgres_host:
+    file: secrets/pst_host.txt

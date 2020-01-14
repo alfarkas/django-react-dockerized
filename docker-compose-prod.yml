@@ -49,7 +49,7 @@ services:
       retries: 1
   celery_worker:
     <<: *backend
-    command: celery -A api worker --loglevel=info --sentry ${SENTRY_DSN}
+    command: start_celery worker
     deploy:
       restart_policy:
         condition: on-failure
@@ -57,7 +57,7 @@ services:
     stdin_open: false
   celery_beat:
     <<: *backend
-    command: celery -A api beat --loglevel=info --sentry ${SENTRY_DSN}
+    command: start_celery beat
     deploy:
       restart_policy:
         condition: on-failure

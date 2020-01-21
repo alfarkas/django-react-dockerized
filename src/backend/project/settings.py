@@ -167,4 +167,7 @@ sentry_sdk.init(
     integrations=[DjangoIntegration(),CeleryIntegration()]
 )
 
+# Secured connection between Proxy and Django
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 from .local_settings import *

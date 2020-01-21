@@ -53,7 +53,7 @@ Collect static files:
 
 ##  Project configuration
 
-Create a file inside backend.hci called `local_settings.py` and paste the code from `local_settings.example.py`
+Create a file inside backend.project called `local_settings.py` and paste the code from `local_settings.example.py`
 (if you don't have a sentry url/id, comment this code in your `local_settings.py` after paste)
 
-Create a file in the root of the project (same level as README.md) called `.env`, paste the code from `.env.example` and complete your credentials.
+Create a file in the root of the project (same level as README.md) called `.env`, paste the code from `.env.example` and complete it with your credentials.

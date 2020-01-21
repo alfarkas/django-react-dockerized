@@ -11,8 +11,8 @@ WORKDIR /opt/backend
 RUN useradd -m container_user
 RUN chown -R container_user:container_user /opt/backend
 
-COPY Pipfile ./
-COPY Pipfile.lock ./
+COPY src/backend/Pipfile ./
+COPY src/backend/Pipfile.lock ./
 RUN pipenv install --system
 
 # Copy entrypoint

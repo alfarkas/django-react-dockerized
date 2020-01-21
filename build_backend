@@ -2,4 +2,4 @@
 set -a
 [ -f .env ] && . .env
 
-docker build $1 -f Dockerfile_backend -t hci/backend:latest -t hci/backend:production -t hci/backend:production-`date +"%Y-%m-%d"` .
+docker build $1 -f backend.Dockerfile -t hci/backend:latest -t hci/backend:production -t hci/backend:production-`date +"%Y-%m-%d"` .

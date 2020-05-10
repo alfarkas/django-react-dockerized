@@ -1,4 +1,4 @@
-FROM python:3.8-buster
+FROM python:3.8-slim-buster
 RUN apt-get update \
     && apt-get install -yq --no-install-recommends \
         python3-psycopg2 \
@@ -21,4 +21,4 @@ COPY src/backend/entrypoint.sh ./entrypoint.sh
 EXPOSE 8000
 
 ENTRYPOINT ["/opt/backend/entrypoint.sh"]
-CMD ["manage", "runserver", "0.0.0.0:8000"]
+#CMD ["manage", "runserver", "0.0.0.0:8000"]

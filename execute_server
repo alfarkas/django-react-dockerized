@@ -1,0 +1,18 @@
+#!/bin/bash
+set -a
+[ -f .env ] && . .env
+
+# execute a command inside the running container
+if [ $1 = "frontend" ]
+then
+    shift
+    docker-compose  -f ${DOCKER_COMPOSE_FILE} exec -T frontend ./entrypoint.sh ${@:1}
+else
+    shift
+    if [ ${@: -1} = "shell" ]
+    then
+        docker-compose  -f ${DOCKER_COMPOSE_FILE} exec backend ./entrypoint.sh ${@:1}
+    else
+        docker-compose  -f ${DOCKER_COMPOSE_FILE} exec -T backend ./entrypoint.sh ${@:1}
+    fi
+fi

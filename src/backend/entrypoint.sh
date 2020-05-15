@@ -1,9 +1,6 @@
 #!/bin/bash
-echo $@
-#exec pipenv --venv
 if [ $1 = "start" ]
 then
-    exec pwd
     exec pipenv shell
     exec pipenv install --system
 fi
@@ -15,8 +12,17 @@ then
 elif [ $1 = "install" ]
 then
     shift
-    #cd /usr/src
     exec pipenv install $@
+elif [ $1 = "rungunicorn" ]
+then
+    shift
+    cpus="$(nproc --all)"
+    workers="$((($cpus * 2) + 1))"
+    if [ $workers -gt 12 ]
+    then
+        workers="12"
+    fi
+    exec gunicorn hci.wsgi:application --bind 0.0.0.0:8000 --workers $workers
 else
     #exec pipenv run $@
     exec $@

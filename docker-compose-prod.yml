@@ -4,35 +4,19 @@ services:
   backend: &backend
     user: "container_user:container_user"
     image: hci/backend:latest
-    command: gunicorn project.wsgi --bind=0.0.0.0
+    command: rungunicorn
     container_name: backend
     tty: true
     stdin_open: true
     depends_on:
-      - db
       - rabbitmq
       - celery_worker
     expose: 
       - "8000"
     volumes:
       - ./src/backend:/opt/backend
-    environment:
-      - PYTHONPATH=/opt/backend
-      - DJANGO_SETTINGS_MODULE=project.settings
-      - FRONTEND_PORT=${FRONTEND_PORT}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-  db:
-    image: postgres:12.1
-    restart: unless-stopped
-    container_name: database
-    volumes:
-      - pgdata:/var/lib/postgresql/data/
-    environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    env_file:
+      - .env
   rabbitmq:
     image: rabbitmq:3.8.2-alpine
     container_name: rabbitmq
@@ -44,33 +28,30 @@ services:
   celery_worker:
     <<: *backend
     container_name: celery_worker
-    command: celery -A project worker --loglevel=info
+    command: celery -A project worker --loglevel=info --sentry=${SENTRY_DSN}
     ports: []
     tty: false
     stdin_open: false
     depends_on: 
       - rabbitmq
-      - db
   celery_beat:
-    <<: *backend
+    <<: *backendrestart
     container_name: celery_beat
-    command: celery -A project beat --loglevel=info
+    command: celery -A project worker --loglevel=info --sentry=${SENTRY_DSN}
     ports: []
     tty: false
     stdin_open: false
     depends_on: 
       - rabbitmq
-      - db
   nginx:
     image: hci/frontend:latest
     restart: always
-    container_name: nginx
+    container_name: proxy_server
     ports:
       - 80:80
       - "443:443"
     volumes:
       - ./conf/nginx-proxy-prod.conf:/etc/nginx/conf.d/default.conf:ro
-      # - ./src/frontend/build:/opt/frontend:ro
       - ./src/backend:/opt/backend
       - ./ssl/concatenated.cer:/etc/ssl/concatenated.cer
       - ./ssl/private_key.key:/etc/ssl/private_key.key
